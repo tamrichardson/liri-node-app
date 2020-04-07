@@ -11,6 +11,7 @@ var spotify = new Spotify(keys.spotify);
 var axios = require("axios");
 var moment = require("moment")
 var fs = require("fs")
+var chalk = require("chalk");
 
 var operation = process.argv[2];
 var request = process.argv[3];
@@ -50,10 +51,10 @@ function song(request) {
         var name = data.tracks.items[0].name;
         var url = data.tracks.items[0].href;
         var album = data.tracks.items[0].album.name;
-        console.log("Song Name: " + name);
-        console.log("Album Name: " + album);
-        console.log("Artist Name: " + artist);
-        console.log("Preview link of the song from spotify " + url);
+        console.log(chalk.magenta("Song Name: " + name));
+        console.log(chalk.magenta("Album Name: " + album));
+        console.log(chalk.magenta("Artist Name: " + artist));
+        console.log(chalk.magenta("Preview link of the song from spotify " + url));
     })
 }
 
@@ -69,15 +70,14 @@ function event(request) {
             var venueCity = response.data[0].venue.city;
             var venueDate = response.data[0].datetime;
             venueDate = moment(venueDate).format('MM/DD/YYYY');
-            console.log("Name of the venue is: " + venueName)
-            console.log("Venue location is: " + venueCity)
-            console.log("Date of the event: is " + venueDate)
+            console.log(chalk.cyan("Name of the venue is: " + venueName));
+            console.log(chalk.cyan("Venue location is: " + venueCity));
+            console.log(chalk.cyan("Date of the event: is " + venueDate));
         })
         .catch(function (error) {
             throw error
         })
 }
-
 
 //movies
 function movie(request) {
@@ -90,14 +90,13 @@ function movie(request) {
     axios.get(queryUrl).then(
         function (response) {
 
-
-            console.log("Title of the movie: " + response.data.Title);
-            console.log("Year the movie came out: " + response.data.Year);
-            console.log("IMDB Rating of the movie: " + response.data.imdbRating);
-            console.log("Country where the movie was produced: " + response.data.Country);
-            console.log("Language of the movie: " + response.data.Language);
-            console.log("Plot of the movie " + response.data.Plot);
-            console.log("Actors in this movie: " + response.data.Actors);
+            console.log(chalk.blue("Title of the movie: " + response.data.Title));
+            console.log(chalk.blue("Year the movie came out: " + response.data.Year));
+            console.log(chalk.blue("IMDB Rating of the movie: " + response.data.imdbRating));
+            console.log(chalk.blue("Country where the movie was produced: " + response.data.Country));
+            console.log(chalk.blue("Language of the movie: " + response.data.Language));
+            console.log(chalk.blue("Plot of the movie " + response.data.Plot));
+            console.log(chalk.blue("Actors in this movie: " + response.data.Actors));
         })
         .catch(function (error) {
             if (error.response) {
@@ -116,11 +115,9 @@ function doSomething() {
             return console.log(error);
         }
 
-        console.log(data);
-
         var dataArr = data.split(",");
 
-        console.log(dataArr);
+        console.log(chalk.red(dataArr));
         operations(dataArr[0], dataArr[1])
     });
 }
