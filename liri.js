@@ -14,15 +14,7 @@ var fs = require("fs")
 
 var operation = process.argv[2];
 var request = process.argv[3];
-var movieSearch = process.argv[3];
-var songSearch = process.argv[3];
 
-if (process.argv.length === 3) {
-    var movieSearch = "Mr Nobody"
-}
-if (process.argv.length === 3) {
-    var songSearch = "Ace of Base"
-}
 
 function operations(operation, request) {
     if (operation === "spotify-this-song") {
@@ -37,14 +29,16 @@ function operations(operation, request) {
         movie(request)
     }
     if (operation === "do-what-it-says") {
-        doSomething(request)
+        doSomething()
     }
 }
 operations(operation, request)
 //songs
 function song(request) {
-
-
+    var songSearch = request
+    if (request === undefined) {
+        songSearch = "Ace of Base"
+    }
     spotify.search({ type: "track", limit: 10, query: songSearch }, function (err, data) {
 
         if (err) {
@@ -87,9 +81,16 @@ function event(request) {
 
 //movies
 function movie(request) {
+    var movieSearch = request
+    if (request === undefined) {
+        movieSearch = "Mr Nobody"
+    }
     var queryUrl = "http://www.omdbapi.com/?t=" + movieSearch + "&y=&plot=short&apikey=trilogy";
+
     axios.get(queryUrl).then(
         function (response) {
+
+
             console.log("Title of the movie: " + response.data.Title);
             console.log("Year the movie came out: " + response.data.Year);
             console.log("IMDB Rating of the movie: " + response.data.imdbRating);
@@ -103,30 +104,22 @@ function movie(request) {
 
                 console.log("---------------Data---------------");
                 console.log(error.response.data);
-
             }
         })
 }
 //do something
 function doSomething() {
 
-    // This block of code will read from the "movies.txt" file.
-    // It's important to include the "utf8" parameter or the code will provide stream data (garbage)
-    // The code will store the contents of the reading inside the variable "data"
     fs.readFile("random.txt", "utf8", function (error, data) {
 
-        // If the code experiences any errors it will log the error to the console.
         if (error) {
             return console.log(error);
         }
 
-        // We will then print the contents of data
         console.log(data);
 
-        // Then split it by commas (to make it more readable)
         var dataArr = data.split(",");
 
-        // We will then re-display the content as an array for later use.
         console.log(dataArr);
         operations(dataArr[0], dataArr[1])
     });
